@@ -1,0 +1,11 @@
+
+* Vibration detection alarm based on MPU9150 for ESP32
+This driver was written for Arquitectura de sistemas
+embebidos/Especialización en Sistemas Embebidos UNER
+
+- to use the driver do as in alarm_test.c
+
+
+** wire as follows
+
+[[./schematic/sch.png]]
