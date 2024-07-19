@@ -7,7 +7,7 @@
 typedef struct {
   uint8_t addr;
   uint8_t i2c_num;
-} I2CMASTER_T;
+} I2CMASTER_DEV_T;
 
 /*! Accel full-scale range */
   typedef enum {
@@ -37,7 +37,7 @@ typedef struct {
     CLOCK_KEEP_RESET = 7,  //!< Stops the clock and keeps timing generator in reset
   } clock_src_t;
 
-  void MPU9150setAddrPort(uint8_t addr, i2c_port_t i2c_num);
+  void MPU9150setAddrPort(I2CMASTER_DEV_T dev, uint8_t addr, uint8_t i2c_num);
   esp_err_t MPU9150initialize();
   esp_err_t MPU9150reset();
 

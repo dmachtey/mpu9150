@@ -18,44 +18,44 @@ esp_err_t MPU9150acceleration(int16_t* x, int16_t* y, int16_t* z);
 /**
  * Read 2 bytes from i2c register
  *
- * @param dev PCA9685_t struct that hold the device information
+ * @param dev I2CMASTER_DEV_T struct that hold the device information
  * @param regaddr register to read from
  * @param valueA
  * @param valueB
  *
  * @return esp_err_t error codes
  */
-esp_err_t generic_read_two_i2c_register(PCA9685_t dev, uint8_t regaddr,
+esp_err_t generic_read_two_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
                                         uint8_t *valueA, uint8_t *valueB);
 
 /**
  * Write 1 byte to i2c register
  *
- * @param dev PCA9685_t struct that hold the device information
+ * @param dev I2CMASTER_DEV_T struct that hold the device information
  * @param regaddr register to write to
  * @param value
  *
  * @return esp_err_t error codes
  */
-esp_err_t generic_write_i2c_register(PCA9685_t dev, uint8_t regaddr,
+esp_err_t generic_write_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
                                      uint8_t value);
 
 /**
  * Write 2 words to i2c register
  *
- * @param dev PCA9685_t struct that hold the device information
+ * @param dev I2CMASTER_DEV_T struct that hold the device information
  * @param regaddr register address to read
  * @param valueA
  * @param valueB
  *
  * @return esp_err_t error codes
  */
-esp_err_t generic_write_i2c_register_two_words(PCA9685_t dev, uint8_t regaddr,
+esp_err_t generic_write_i2c_register_two_words(I2CMASTER_DEV_T dev, uint8_t regaddr,
                                                uint16_t valueA,
                                                uint16_t valueB);
 
 
-void MPU9150setAddrPort(uint8_t addr, i2c_port_t i2c_num) {}
+void MPU9150setAddrPort(I2CMASTER_DEV_T dev, uint8_t addr, i2c_port_t i2c_num) {}
 esp_err_t MPU9150initialize() {}
 esp_err_t MPU9150reset() {}
 
@@ -70,7 +70,7 @@ esp_err_t MPU9150acceleration(int16_t* x, int16_t* y, int16_t* z) {}
 
 
 
-esp_err_t generic_write_i2c_register(PCA9685_t dev, uint8_t regaddr,
+esp_err_t generic_write_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
                                      uint8_t value) {
   esp_err_t ret;
 
@@ -86,7 +86,7 @@ esp_err_t generic_write_i2c_register(PCA9685_t dev, uint8_t regaddr,
   return ret;
 }
 
-esp_err_t generic_read_two_i2c_register(PCA9685_t dev, uint8_t regaddr,
+esp_err_t generic_read_two_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
                                         uint8_t *valueA, uint8_t *valueB) {
   esp_err_t ret;
 
@@ -112,7 +112,7 @@ esp_err_t generic_read_two_i2c_register(PCA9685_t dev, uint8_t regaddr,
   return ret;
 }
 
-esp_err_t generic_write_i2c_register_two_words(PCA9685_t dev, uint8_t regaddr,
+esp_err_t generic_write_i2c_register_two_words(I2CMASTER_DEV_T dev, uint8_t regaddr,
                                                uint16_t valueA,
                                                uint16_t valueB) {
   esp_err_t ret;

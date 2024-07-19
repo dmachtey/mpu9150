@@ -1,4 +1,4 @@
-#include "ledcontrol.h"
+#include "alarm.h"
 #include "mpu9150.h"
 #include <driver/gpio.h>
 #include <driver/i2c.h>
@@ -8,10 +8,25 @@
 #define I2C_MASTER_RX_BUF_DISABLE 0 /*!< I2C master do not need buffer */
 
 uint8_t master_initialized = 0;
-I2CMASTER_T i2c_master;
+I2CMASTER_DEV_T i2c_master;
+
+/**
+ * Initialize the i2c master
+ *
+ */
+void i2c_master_init(void);
 
 
-void alrmInit(uint8_t threshold){}
+
+void alrmInit(uint8_t threshold) {
+  if (!master_initialized){
+    master_initialized = 1;
+    i2c_master_init();
+    MPU9150initialize();
+
+  }
+
+}
 uint8_t alarmStatus(void){}
 void alarmReset(void){}
 
@@ -31,9 +46,4 @@ void i2c_master_init(void) {
   ESP_ERROR_CHECK(i2c_driver_install(i2c_master_port, conf.mode,
                                      I2C_MASTER_RX_BUF_DISABLE,
                                      I2C_MASTER_TX_BUF_DISABLE, 0));
-}
-
-void allLedOff(void) {
-  for (uint8_t j = 1; j < 17; ++j)
-    controlLed(j, 0);
 }
