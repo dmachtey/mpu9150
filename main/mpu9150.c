@@ -3,131 +3,52 @@
 #include <math.h>
 #include <stdint.h>
 
-void MPU9150setAddrPort(uint8_t addr, i2c_port_t i2c_num);
-esp_err_t MPU9150initialize();
-esp_err_t MPU9150reset();
+esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+                                      uint8_t data);
+esp_err_t MPU9150_register_read(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+                                uint8_t *data, size_t len);
 
-esp_err_t MPU9150setSampleRate(uint16_t rate);
-esp_err_t MPU9150setClockSource(clock_src_t clockSrc);
-esp_err_t MPU9150setDigitalLowPassFilter(dlpf_t dlpf);
-
-esp_err_t MPU9150setAccelFullScale(accel_fs_t fsr);
-
-esp_err_t MPU9150acceleration(int16_t* x, int16_t* y, int16_t* z);
-
-/**
- * Read 2 bytes from i2c register
- *
- * @param dev I2CMASTER_DEV_T struct that hold the device information
- * @param regaddr register to read from
- * @param valueA
- * @param valueB
- *
- * @return esp_err_t error codes
- */
-esp_err_t generic_read_two_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
-                                        uint8_t *valueA, uint8_t *valueB);
-
-/**
- * Write 1 byte to i2c register
- *
- * @param dev I2CMASTER_DEV_T struct that hold the device information
- * @param regaddr register to write to
- * @param value
- *
- * @return esp_err_t error codes
- */
-esp_err_t generic_write_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
-                                     uint8_t value);
-
-/**
- * Write 2 words to i2c register
- *
- * @param dev I2CMASTER_DEV_T struct that hold the device information
- * @param regaddr register address to read
- * @param valueA
- * @param valueB
- *
- * @return esp_err_t error codes
- */
-esp_err_t generic_write_i2c_register_two_words(I2CMASTER_DEV_T dev, uint8_t regaddr,
-                                               uint16_t valueA,
-                                               uint16_t valueB);
-
-
-void MPU9150setAddrPort(I2CMASTER_DEV_T dev, uint8_t addr, i2c_port_t i2c_num) {}
-esp_err_t MPU9150initialize() {}
-esp_err_t MPU9150reset() {}
-
-esp_err_t MPU9150setSampleRate(uint16_t rate) {}
-esp_err_t MPU9150setClockSource(clock_src_t clockSrc) {}
-esp_err_t MPU9150setDigitalLowPassFilter(dlpf_t dlpf) {}
-
-esp_err_t MPU9150setAccelFullScale(accel_fs_t fsr) {}
-
-esp_err_t MPU9150acceleration(int16_t* x, int16_t* y, int16_t* z) {}
-
-
-
-
-esp_err_t generic_write_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
-                                     uint8_t value) {
-  esp_err_t ret;
-
-  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-  i2c_master_start(cmd);
-  i2c_master_write_byte(cmd, (dev.addr << 1) | I2C_MASTER_WRITE, ACK_CHECK_EN);
-  i2c_master_write_byte(cmd, regaddr, ACK_CHECK_EN);
-  i2c_master_write_byte(cmd, value, NACK_VAL);
-  i2c_master_stop(cmd);
-  ret = i2c_master_cmd_begin(dev.i2c_num, cmd, 1000 / portTICK_PERIOD_MS);
-  i2c_cmd_link_delete(cmd);
-
-  return ret;
+void MPU9150setAddrPort(I2CMASTER_DEV_T *dev, uint8_t addr, uint8_t i2c_num) {
+  dev->addr = addr;
+  dev->i2c_num = i2c_num;
 }
 
-esp_err_t generic_read_two_i2c_register(I2CMASTER_DEV_T dev, uint8_t regaddr,
-                                        uint8_t *valueA, uint8_t *valueB) {
-  esp_err_t ret;
-
-  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-  i2c_master_start(cmd);
-  i2c_master_write_byte(cmd, (dev.addr << 1) | I2C_MASTER_WRITE, ACK_CHECK_EN);
-  i2c_master_write_byte(cmd, regaddr, ACK_CHECK_EN);
-  i2c_master_stop(cmd);
-  ret = i2c_master_cmd_begin(dev.i2c_num, cmd, 1000 / portTICK_RATE_MS);
-  i2c_cmd_link_delete(cmd);
-  if (ret != ESP_OK) {
-    return ret;
-  }
-  cmd = i2c_cmd_link_create();
-  i2c_master_start(cmd);
-  i2c_master_write_byte(cmd, dev.addr << 1 | I2C_MASTER_READ, ACK_CHECK_EN);
-  i2c_master_read_byte(cmd, valueA, ACK_VAL);
-  i2c_master_read_byte(cmd, valueB, NACK_VAL);
-  i2c_master_stop(cmd);
-  ret = i2c_master_cmd_begin(dev.i2c_num, cmd, 1000 / portTICK_RATE_MS);
-  i2c_cmd_link_delete(cmd);
-
-  return ret;
+esp_err_t MPU9150initialize(I2CMASTER_DEV_T dev) {
+  return MPU9150_register_write_byte(dev, MPU9150_PWR_MGMT_1_REG_ADDR,
+                                     MPU9150_WAKEUP);
 }
 
-esp_err_t generic_write_i2c_register_two_words(I2CMASTER_DEV_T dev, uint8_t regaddr,
-                                               uint16_t valueA,
-                                               uint16_t valueB) {
-  esp_err_t ret;
+esp_err_t MPU9150reset(I2CMASTER_DEV_T dev) {
+  return MPU9150_register_write_byte(dev, MPU9150_PWR_MGMT_1_REG_ADDR,
+                                     1 << MPU9150_RESET_BIT);
+}
 
-  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-  i2c_master_start(cmd);
-  i2c_master_write_byte(cmd, (dev.addr << 1) | I2C_MASTER_WRITE, ACK_CHECK_EN);
-  i2c_master_write_byte(cmd, regaddr, ACK_CHECK_EN);
-  i2c_master_write_byte(cmd, valueA & 0xff, ACK_VAL);
-  i2c_master_write_byte(cmd, valueA >> 8, NACK_VAL);
-  i2c_master_write_byte(cmd, valueB & 0xff, ACK_VAL);
-  i2c_master_write_byte(cmd, valueB >> 8, NACK_VAL);
-  i2c_master_stop(cmd);
-  ret = i2c_master_cmd_begin(dev.i2c_num, cmd, 1000 / portTICK_PERIOD_MS);
-  i2c_cmd_link_delete(cmd);
+esp_err_t MPU9150acceleration(I2CMASTER_DEV_T dev, uint16_t *x, uint16_t *y,
+                              uint16_t *z) {
+  esp_err_t err = 0;
+  uint8_t data[6];
+  err = MPU9150_register_read(dev, 0x3B, data, 6);
+  *x = (data[0] << 8) | data[1];
+  *y = (data[2] << 8) | data[3];
+  *z = (data[4] << 8) | data[5];
+  return err;
+}
+
+esp_err_t MPU9150_register_read(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+                                uint8_t *data, size_t len) {
+  return i2c_master_write_read_device(
+      dev.i2c_num, dev.addr, &reg_addr, 1, data, len,
+      I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
+}
+
+esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+                                      uint8_t data) {
+  int ret;
+  uint8_t write_buf[2] = {reg_addr, data};
+
+  ret = i2c_master_write_to_device(dev.i2c_num, dev.addr, write_buf,
+                                   sizeof(write_buf),
+                                   I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
 
   return ret;
 }
