@@ -16,7 +16,7 @@
  *
  * @return esp_err_t error codes
  */
-esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+static inline esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
                                       uint8_t data);
 
 /**
@@ -29,7 +29,7 @@ esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
  *
  * @return esp_err_t error codes
  */
-esp_err_t MPU9150_register_read(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+static inline esp_err_t MPU9150_register_read(I2CMASTER_DEV_T dev, uint8_t reg_addr,
                                 uint8_t *data, size_t len);
 
 void MPU9150setAddrPort(I2CMASTER_DEV_T *dev, uint8_t addr, uint8_t i2c_num) {
@@ -58,14 +58,14 @@ esp_err_t MPU9150acceleration(I2CMASTER_DEV_T dev, uint16_t *x, uint16_t *y,
   return err;
 }
 
-esp_err_t MPU9150_register_read(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+static inline esp_err_t MPU9150_register_read(I2CMASTER_DEV_T dev, uint8_t reg_addr,
                                 uint8_t *data, size_t len) {
   return i2c_master_write_read_device(
       dev.i2c_num, dev.addr, &reg_addr, 1, data, len,
       I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
 }
 
-esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
+static inline esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
                                       uint8_t data) {
   int ret;
   uint8_t write_buf[2] = {reg_addr, data};

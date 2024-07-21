@@ -15,7 +15,7 @@
 
 uint8_t master_initialized = 0; /**< I2C master initialized memory */
 I2CMASTER_DEV_T i2c_master; /**< Hold the master port and slave address info */
-float_t threshold;          /**< Alarm threshold */
+float_t thres;          /**< Alarm threshold */
 uint8_t status = 0;         /**< Alarm trigger status */
 
 /**
@@ -42,7 +42,7 @@ esp_err_t alarmInit(float_t threshold) {
     if (err)
       return err;
   }
-  threshold = threshold;
+  thres = threshold;
   return err;
 }
 
@@ -52,7 +52,7 @@ uint8_t alarmStatus(void) {
   MPU9150acceleration(i2c_master, &x, &y, &z);
   float_t accel_vector = sqrt(x * x + y * y + z * z);
   float_t accel_dif = fabs(accel_vector_old - accel_vector);
-  if ((accel_vector_old != 0.0) && ((accel_dif / accel_vector) > threshold))
+  if ((accel_vector_old != 0.0) && ((accel_dif / accel_vector) > thres))
     status = 1;
 
   accel_vector_old = accel_vector;
