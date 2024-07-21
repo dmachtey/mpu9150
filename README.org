@@ -7,8 +7,4 @@ embebidos/Especialización en Sistemas Embebidos UNER
 
 
 ** wire as follows
-
 [[./schematic/sch.png]]
-
-** demo video
-[[./video/demo.mp4]]

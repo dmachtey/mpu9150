@@ -1,3 +1,7 @@
+// =========================================================================
+// Copyright 2024 Damian Pablo Machtey. All rights reserved.
+// =========================================================================
+
 #include "alarm.h"
 #include <driver/gpio.h>
 #include <freertos/FreeRTOS.h>

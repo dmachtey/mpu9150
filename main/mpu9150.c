@@ -1,10 +1,34 @@
+// =========================================================================
+// Copyright 2024 Damian Pablo Machtey. All rights reserved.
+// =========================================================================
+
 #include "mpu9150.h"
 #include <driver/i2c.h>
 #include <math.h>
 #include <stdint.h>
 
+/**
+ * Write a byte into a device register
+ *
+ * @param dev I2CMASTER_DEV_T holding the master port and slave address info
+ * @param reg_addr
+ * @param data
+ *
+ * @return esp_err_t error codes
+ */
 esp_err_t MPU9150_register_write_byte(I2CMASTER_DEV_T dev, uint8_t reg_addr,
                                       uint8_t data);
+
+/**
+ *  Read len bytes from a device register
+ *
+ * @param dev I2CMASTER_DEV_T holding the master port and slave address info
+ * @param reg_addr
+ * @param data
+ * @param len
+ *
+ * @return esp_err_t error codes
+ */
 esp_err_t MPU9150_register_read(I2CMASTER_DEV_T dev, uint8_t reg_addr,
                                 uint8_t *data, size_t len);
 

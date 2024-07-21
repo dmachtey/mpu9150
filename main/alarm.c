@@ -1,3 +1,7 @@
+// =========================================================================
+// Copyright 2024 Damian Pablo Machtey. All rights reserved.
+// =========================================================================
+
 #include "alarm.h"
 #include "mpu9150.h"
 #include <driver/gpio.h>
@@ -9,11 +13,18 @@
 #define I2C_MASTER_TX_BUF_DISABLE 0 /*!< I2C master do not need buffer */
 #define I2C_MASTER_RX_BUF_DISABLE 0 /*!< I2C master do not need buffer */
 
-uint8_t master_initialized = 0;
-I2CMASTER_DEV_T i2c_master;
-float_t threshold;
-uint8_t status = 0;
+uint8_t master_initialized = 0; /**< I2C master initialized memory */
+I2CMASTER_DEV_T i2c_master; /**< Hold the master port and slave address info */
+float_t threshold;          /**< Alarm threshold */
+uint8_t status = 0;         /**< Alarm trigger status */
 
+/**
+ * Initialize i2c master device
+ *
+ *  @param dev I2CMASTER_DEV_T holding the master port and slave address info
+ *
+ * @return esp_err_t error codes
+ */
 esp_err_t i2c_master_init(I2CMASTER_DEV_T dev);
 
 esp_err_t alarmInit(float_t threshold) {
