@@ -15,6 +15,7 @@ void app_main(void) {
   alarmInit(0.30);
 
   while (1) {
+
     if (alarmStatus()) {
       gpio_set_level(GPIO_NUM_23, 1);
       vTaskDelay(1200 / portTICK_PERIOD_MS);

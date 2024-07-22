@@ -47,11 +47,11 @@ esp_err_t MPU9150reset(I2CMASTER_DEV_T dev) {
                                      1 << MPU9150_RESET_BIT);
 }
 
-esp_err_t MPU9150acceleration(I2CMASTER_DEV_T dev, uint16_t *x, uint16_t *y,
-                              uint16_t *z) {
+esp_err_t MPU9150acceleration(I2CMASTER_DEV_T dev, int16_t *x, int16_t *y,
+                              int16_t *z) {
   esp_err_t err = 0;
   uint8_t data[6];
-  err = MPU9150_register_read(dev, 0x3B, data, 6);
+  err = MPU9150_register_read(dev, MPU9150_ACCEL_OUT, data, 6);
   *x = (data[0] << 8) | data[1];
   *y = (data[2] << 8) | data[3];
   *z = (data[4] << 8) | data[5];

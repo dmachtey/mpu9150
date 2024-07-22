@@ -58,7 +58,7 @@ esp_err_t MPU9150reset(I2CMASTER_DEV_T dev);
  *
  * @return esp_err_t error codes
  */
-esp_err_t MPU9150acceleration(I2CMASTER_DEV_T dev, uint16_t *x, uint16_t *y,
-                              uint16_t *z);
+esp_err_t MPU9150acceleration(I2CMASTER_DEV_T dev, int16_t *x, int16_t *y,
+                              int16_t *z);
 
 #endif /* MPU9150_HRIVER_H */

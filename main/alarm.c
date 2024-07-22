@@ -35,20 +35,23 @@ esp_err_t alarmInit(float_t threshold) {
     if (err)
       return err;
     master_initialized = 1;
+    vTaskDelay(200 / portTICK_PERIOD_MS);
     err = MPU9150reset(i2c_master);
     if (err)
       return err;
+    vTaskDelay(200 / portTICK_PERIOD_MS);
     err = MPU9150initialize(i2c_master);
     if (err)
       return err;
   }
   thres = threshold;
+  vTaskDelay(200 / portTICK_PERIOD_MS);
   return err;
 }
 
 uint8_t alarmStatus(void) {
   static float_t accel_vector_old = 0.0;
-  uint16_t x, y, z;
+  int16_t x, y, z;
   MPU9150acceleration(i2c_master, &x, &y, &z);
   float_t accel_vector = sqrt(x * x + y * y + z * z);
   float_t accel_dif = fabs(accel_vector_old - accel_vector);
